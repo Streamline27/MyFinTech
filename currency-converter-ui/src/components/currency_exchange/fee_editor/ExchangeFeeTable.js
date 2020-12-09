@@ -12,7 +12,7 @@ export function ExchangeFeeTable(props) {
             </td>
         </tr>
         { currencyFees.map(it =>
-            <tr>
+            <tr key={it.id}>
                 <td>{it.from}</td>
                 <td>{it.to}</td>
                 <td>{it.fee}</td>

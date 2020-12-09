@@ -11,8 +11,8 @@ export function ExchangeFeeEditor() {
     const [ isExchangeFeesLoading, setIsExchangeFeesLoading ] = useState(true)
     const [ isAvailableCurrenciesLoading, setIsAvailableCurrenciesLoading ] = useState(true)
 
-    useEffect(() => CurrencyExchangeApi.getAvailableCurrencies(handleGetAvailableCurrenciesSuccess), [availableCurrencies])
-    useEffect(() => CurrencyExchangeApi.getFees(handleGetFeesSuccess), [exchangeFees])
+    useEffect(() => CurrencyExchangeApi.getAvailableCurrencies(handleGetAvailableCurrenciesSuccess), [setAvailableCurrencies])
+    useEffect(() => CurrencyExchangeApi.getFees(handleGetFeesSuccess), [setExchangeFees])
 
     function handleRemoveFee(fee) {
         CurrencyExchangeApi.removeFee(fee, handleRemoveFeeSuccess)

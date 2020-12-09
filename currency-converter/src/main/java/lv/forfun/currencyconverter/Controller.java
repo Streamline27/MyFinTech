@@ -34,7 +34,7 @@ public class Controller {
         return feeEditorService.save(request);
     }
 
-    @DeleteMapping("/exchnageFees")
+    @DeleteMapping("/exchangeFees")
     public ExchangeFeeResponse deleteExchangeFee(String from, String to) {
         return feeEditorService.delete(from, to);
     }

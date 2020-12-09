@@ -7,7 +7,7 @@ Content-Type: application/json
 <> 2020-12-09T075049.200.json
 
 ###
-DELETE http://localhost:8080/fee-editor/exchnageFees?from=RUB&to=EUR
+DELETE http://localhost:8080/fee-editor/exchangeFees?from=RUB&to=EUR
 
 ###
 GET http://localhost:8080/fee-editor/currencies
