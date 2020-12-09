@@ -1,0 +1,18 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /fee-editor
+
+spring:
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+  flyway:
+    enabled: true
+
+fee-editor:
+  exchange-rate-url: "https://api.exchangeratesapi.io"
+  default-fee: 0.01

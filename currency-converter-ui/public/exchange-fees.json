@@ -1,0 +1,34 @@
+{
+  "exchangeFees": [
+    {
+      "from" : "EUR",
+      "to" : "RUB",
+      "fee" : 0.01
+    },
+    {
+      "from" : "RUB",
+      "to" : "EUR",
+      "fee" : 0.02
+    },
+    {
+      "from" : "LAT",
+      "to" : "RUB",
+      "fee" : 0.03
+    },
+    {
+      "from" : "RUB",
+      "to" : "LAT",
+      "fee" : 0.04
+    },
+    {
+      "from" : "EUR",
+      "to" : "LAT",
+      "fee" : 0.05
+    },
+    {
+      "from" : "LAT",
+      "to" : "EUR",
+      "fee" : 0.06
+    }
+  ]
+}
