@@ -2,10 +2,7 @@ package lv.forfun.currencyconverter.feature;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lv.forfun.currencyconverter.api.fee.editor.ExchangeFeeDto;
-import lv.forfun.currencyconverter.api.fee.editor.ExchangeFeePutRequest;
-import lv.forfun.currencyconverter.api.fee.editor.ExchangeFeeResponse;
-import lv.forfun.currencyconverter.api.fee.editor.ExchangeFeesResponse;
+import lv.forfun.currencyconverter.api.fee.editor.*;
 import lv.forfun.currencyconverter.domain.ExchangeFee;
 import lv.forfun.currencyconverter.domain.ExchangeFeeRepository;
 import org.springframework.stereotype.Component;
@@ -42,11 +39,12 @@ public class FeeEditorService {
         return new ExchangeFeeResponse(request.getExchangeFee());
     }
 
-    public ExchangeFeeResponse delete(String fromCurrencyCode, String toCurrencyCode) {
-        log.info("Deleting exchange fee. from:[{}], to:[{}]", fromCurrencyCode, toCurrencyCode);
-        Optional<ExchangeFee> fee = repository.findByFromAndTo(fromCurrencyCode, toCurrencyCode);
+    public ExchangeFeeResponse delete(ExchangeFeeDeleteRequest request) {
+        ExchangeFeeDto feeDto = request.getExchangeFee();
+        log.info("Deleting exchange fee. from:[{}], to:[{}]", feeDto.getFrom(), feeDto.getTo());
+        Optional<ExchangeFee> fee = repository.findByFromAndTo(feeDto.getFrom(), feeDto.getTo());
         if (fee.isEmpty()) {
-            throw new IllegalStateException("Could not find fee. fromCurrency:[" + fromCurrencyCode + "], toCurrency:[" + toCurrencyCode + "]");
+            throw new IllegalStateException("Could not find fee. fromCurrency:[" + feeDto.getFrom() + "], toCurrency:[" + feeDto.getTo() + "]");
         }
         repository.delete(fee.get());
         return new ExchangeFeeResponse(map(fee.get()));

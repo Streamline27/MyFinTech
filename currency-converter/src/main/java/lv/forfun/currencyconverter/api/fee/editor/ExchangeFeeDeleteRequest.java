@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Value;
 import lv.forfun.currencyconverter.api.Regex;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -13,10 +14,6 @@ import javax.validation.constraints.Pattern;
 @AllArgsConstructor
 public class ExchangeFeeDeleteRequest {
     @NotNull
-    @Pattern(regexp = Regex.ISO_CURRENCY)
-    String from;
-
-    @NotNull
-    @Pattern(regexp = Regex.ISO_CURRENCY)
-    String to;
+    @Valid
+    ExchangeFeeDto exchangeFee;
 }

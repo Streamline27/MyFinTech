@@ -41,8 +41,8 @@ public class Controller {
     }
 
     @DeleteMapping("/exchangeFees")
-    public ExchangeFeeResponse deleteExchangeFee(@Valid ExchangeFeeDeleteRequest request) {
-        return feeEditorService.delete(request.getFrom(), request.getTo());
+    public ExchangeFeeResponse deleteExchangeFee(@Valid @RequestBody ExchangeFeeDeleteRequest request) {
+        return feeEditorService.delete(request);
     }
 
     @GetMapping("/conversion")

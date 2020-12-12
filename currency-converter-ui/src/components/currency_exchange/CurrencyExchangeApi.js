@@ -12,8 +12,9 @@ CurrencyExchangeApi.getFees = function (onSuccess, onError) {
 }
 
 CurrencyExchangeApi.removeFee = function (fee, onSuccess, onError) {
+    let body = { exchangeFee: fee }
     let url = "http://localhost:8090/currency-calculator/exchangeFees?" + new URLSearchParams({ from: fee.from, to: fee.to})
-    fetch(url, { method: "DELETE" })
+    fetch(url, { method: "DELETE", body: JSON.stringify(body), headers: { "content-type": "application/json", "accept": "application/json"} })
         .then(res => handleResponse(res, onSuccess, onError))
 }
 
