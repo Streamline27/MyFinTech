@@ -19,28 +19,24 @@ public class ExchangeRatesApi {
     private final RestTemplate restTemplate;
 
     public Response getExchangeRates() {
-        return getExchangeRates(latest());
+        return getExchangeRates("");
     }
 
     public Response getExchangeRates(String from, String to) {
         return getExchangeRates(latest(from, to));
     }
 
-    public Response getExchangeRates(String params) {
-        ResponseEntity<Response> response = restTemplate.getForEntity(properties.getExchangeRateUrl() + params, Response.class);
+    private Response getExchangeRates(String params) {
+        ResponseEntity<Response> response = restTemplate.getForEntity(properties.getExchangeRateUrl() + "/latest" + params, Response.class);
         HttpStatus code = response.getStatusCode();
         if (code != HttpStatus.OK) {
-            throw new IllegalStateException("Could not fetch data from exchange rate service! Bad response code:[" + code + "]");
+            throw new IllegalStateException("Could not fetch data from exchange rate service! Unexpected response code:[" + code + "]");
         }
         return response.getBody();
     }
 
-    private String latest() {
-        return "/latest";
-    }
-
     private String latest(String from, String to) {
-        return "/latest?base=" + from + "&symbols=" + to;
+        return "?base=" + from + "&symbols=" + to;
     }
 
     @Value

@@ -1,6 +1,7 @@
 package lv.forfun.currencyconverter.feature;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lv.forfun.currencyconverter.api.fee.editor.ExchangeFeeDto;
 import lv.forfun.currencyconverter.api.fee.editor.ExchangeFeePutRequest;
 import lv.forfun.currencyconverter.api.fee.editor.ExchangeFeeResponse;
@@ -13,6 +14,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class FeeEditorService {
@@ -20,19 +22,28 @@ public class FeeEditorService {
     private final ExchangeFeeRepository repository;
 
     public ExchangeFeesResponse getExchangeFees() {
+        log.info("Requesting list of exchange fees.");
         Set<ExchangeFeeDto> fees = repository.findAll().stream()
                 .map(this::map)
                 .collect(Collectors.toSet());
         return new ExchangeFeesResponse(fees);
     }
 
-    public ExchangeFeeResponse save(ExchangeFeePutRequest request) {
-        ExchangeFee fee = map(request.getExchangeFee());
-        repository.save(fee);
+    public ExchangeFeeResponse upsert(ExchangeFeePutRequest request) {
+        ExchangeFeeDto feeDto = request.getExchangeFee();
+        Optional<ExchangeFee> fee = repository.findByFromAndTo(feeDto.getFrom(), feeDto.getTo());
+        if (fee.isPresent()) {
+            log.info("Saving exchange fee. from:[{}], to:[{}], fee:[{}]", feeDto.getFrom(), feeDto.getTo(), feeDto.getFee());
+            repository.save(fee.get().setFee(feeDto.getFee()));
+        } else {
+            log.info("Updating exchange fee. from:[{}], to:[{}], fee:[{}]", feeDto.getFrom(), feeDto.getTo(), feeDto.getFee());
+            repository.save(map(feeDto));
+        }
         return new ExchangeFeeResponse(request.getExchangeFee());
     }
 
     public ExchangeFeeResponse delete(String fromCurrencyCode, String toCurrencyCode) {
+        log.info("Deleting exchange fee. from:[{}], to:[{}]", fromCurrencyCode, toCurrencyCode);
         Optional<ExchangeFee> fee = repository.findByFromAndTo(fromCurrencyCode, toCurrencyCode);
         if (fee.isEmpty()) {
             throw new IllegalStateException("Could not find fee. fromCurrency:[" + fromCurrencyCode + "], toCurrency:[" + toCurrencyCode + "]");

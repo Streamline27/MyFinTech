@@ -1,16 +1,14 @@
 ###
-PUT http://localhost:8080/fee-editor/exchangeFees HTTP/1.1
+PUT http://localhost:8090/currency-calculator/exchangeFees HTTP/1.1
 Content-Type: application/json
 
 { "exchangeFee" : { "from" : "RUB", "to": "EUR", "fee":  0.05} }
 
-<> 2020-12-09T075049.200.json
+###
+DELETE http://localhost:8090/currency-calculator/exchangeFees?from=RUB&to=EUR
 
 ###
-DELETE http://localhost:8080/fee-editor/exchangeFees?from=RUB&to=EUR
+GET http://localhost:8090/currency-calculator/currencies
 
 ###
-GET http://localhost:8080/fee-editor/currencies
-
-###
-GET http://localhost:8080/fee-editor/conversion?from=RUB&to=EUR&amount=100
+GET http://localhost:8090/currency-calculator/conversion?from=RUB&to=EUR&amount=100

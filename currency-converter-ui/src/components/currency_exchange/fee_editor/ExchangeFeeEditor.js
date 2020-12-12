@@ -36,11 +36,13 @@ export function ExchangeFeeEditor() {
     }
 
     function handleRemoveFeeSuccess(response) {
-        setExchangeFees(prevFees => prevFees.filter(it => it.id !== ExchangeFee.from(response.exchangeFee).id))
+        let fee = ExchangeFee.from(response.exchangeFee)
+        setExchangeFees(prevFees => prevFees.filter(it => it.id !== fee.id))
     }
 
     function handleAddFeeSuccess(response) {
-        setExchangeFees(prevFees => [ExchangeFee.from(response.exchangeFee), ...prevFees])
+        let fee = ExchangeFee.from(response.exchangeFee)
+        setExchangeFees(prevFees => [ExchangeFee.from(response.exchangeFee), ...prevFees.filter(it => it.id !== fee.id)])
     }
 
     if (isExchangeFeesLoading || isAvailableCurrenciesLoading) {
