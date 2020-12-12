@@ -2,8 +2,6 @@ import React, {useEffect, useState} from "react";
 import {Spinner} from "../Spinner";
 import {CurrencyExchangeApi} from "../CurrencyExchangeApi";
 
-
-
 export function CurrencyCalculator() {
     const [ availableCurrencies, setAvailableCurrencies ] = useState([])
     const [ fromCurrency, setFromCurrency ] = useState("EUR")
@@ -22,7 +20,10 @@ export function CurrencyCalculator() {
     }, [])
 
     useEffect(() => {
-        let timeoutId = setTimeout(()=> { setIsCurrencyExchangeAmountLoading(true)}, 100)
+        if (amount === "") {
+            return
+        }
+        let timeoutId = setTimeout(()=> { setIsCurrencyExchangeAmountLoading(true) }, 100)
         function handleComputeResultingExchangeAmountSuccess(response) {
             setCost(computeCost(fromCurrency, toCurrency, response.conversion))
             setIsCurrencyExchangeAmountLoading(false)
@@ -33,7 +34,16 @@ export function CurrencyCalculator() {
     }, [fromCurrency, toCurrency, amount])
 
     function handleAmountChange({target}) {
-        setAmount(target.value)
+        let nextAmount = target.value.trim()
+        if (nextAmount === "" || isNumeric(nextAmount)) {
+            setAmount(nextAmount)
+        }
+    }
+
+    function isNumeric(str) {
+        if (typeof str != "string") return false // we only process strings!
+        return !isNaN(str) && // use type coercion to parse the _entirety_ of the string (`parseFloat` alone does not do this)...
+            !isNaN(parseFloat(str)) // ...and ensure strings of whitespace fail
     }
 
     function handleFromCurrencyChange({target}) {
