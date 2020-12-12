@@ -32,7 +32,7 @@ export function ExchangeFeeEditor() {
     }
 
     function handleAddFee(fee) {
-        CurrencyExchangeApi.addFee(fee, handleAddFeeSuccess)
+        CurrencyExchangeApi.addFee(fee, handleAddFeeSuccess, handleAddFeeError)
     }
 
     function handleRemoveFeeSuccess(response) {
@@ -43,6 +43,11 @@ export function ExchangeFeeEditor() {
     function handleAddFeeSuccess(response) {
         let fee = ExchangeFee.from(response.exchangeFee)
         setExchangeFees(prevFees => [ExchangeFee.from(response.exchangeFee), ...prevFees.filter(it => it.id !== fee.id)])
+    }
+
+    function handleAddFeeError(response) {
+        setIsExchangeFeesLoading(false)
+        alert(response.message)
     }
 
     if (isExchangeFeesLoading || isAvailableCurrenciesLoading) {

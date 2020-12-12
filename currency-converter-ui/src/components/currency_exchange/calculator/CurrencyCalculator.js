@@ -2,12 +2,14 @@ import React, {useEffect, useState} from "react";
 import {Spinner} from "../Spinner";
 import {CurrencyExchangeApi} from "../CurrencyExchangeApi";
 
+const COST_PLACEHOLDER = "Calculator!"
+
 export function CurrencyCalculator() {
     const [ availableCurrencies, setAvailableCurrencies ] = useState([])
     const [ fromCurrency, setFromCurrency ] = useState("EUR")
     const [ toCurrency, setToCurrency ] = useState("RUB")
     const [ amount, setAmount ] = useState("0.00")
-    const [ cost, setCost ] = useState("Calculator!")
+    const [ cost, setCost ] = useState(COST_PLACEHOLDER)
     const [ isCurrencyExchangeAmountLoading, setIsCurrencyExchangeAmountLoading] = useState(true)
     const [ isAvailableCurrenciesLoading, setIsAvailableCurrenciesLoading] = useState(true)
 
@@ -20,7 +22,7 @@ export function CurrencyCalculator() {
     }, [])
 
     useEffect(() => {
-        if (amount === "") {
+        if (amount === "" || amount === "-") {
             return
         }
         let timeoutId = setTimeout(()=> { setIsCurrencyExchangeAmountLoading(true) }, 100)
@@ -29,13 +31,21 @@ export function CurrencyCalculator() {
             setIsCurrencyExchangeAmountLoading(false)
             clearTimeout(timeoutId)
         }
-        CurrencyExchangeApi.computeCurrencyExchangeAmount(fromCurrency, toCurrency, amount, handleComputeResultingExchangeAmountSuccess)
+        function handleComputeResultingExchangeAmountError(response) {
+            setCost(response.message)
+            setIsCurrencyExchangeAmountLoading(false)
+            clearTimeout(timeoutId)
+        }
+        CurrencyExchangeApi.computeCurrencyExchangeAmount(fromCurrency, toCurrency, amount,
+            handleComputeResultingExchangeAmountSuccess,
+            handleComputeResultingExchangeAmountError
+        )
         return () => clearTimeout(timeoutId)
     }, [fromCurrency, toCurrency, amount])
 
     function handleAmountChange({target}) {
         let nextAmount = target.value.trim()
-        if (nextAmount === "" || isNumeric(nextAmount)) {
+        if (nextAmount === "" || nextAmount === "-" || isNumeric(nextAmount)) {
             setAmount(nextAmount)
         }
     }
