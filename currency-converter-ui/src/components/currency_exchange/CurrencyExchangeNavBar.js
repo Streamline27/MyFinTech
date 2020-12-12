@@ -11,10 +11,10 @@ export function CurrencyExchangeNavBar(props) {
             <div className="col-md-12">
                 <ul className="nav nav-tabs">
                     <li className="nav-item" onClick={handleClickCalculator}>
-                        <a className={ "nav-link" + (currentTab === tab.CALCULATOR ? " active" : "") } href="#">Calculator</a>
+                        <a className={ "nav-link" + (currentTab === tab.CALCULATOR ? " active" : "") } href="/#">Calculator</a>
                     </li>
                     <li className="nav-item" onClick={handleClickFeeEditor}>
-                        <a className={ "nav-link" + (currentTab === tab.FEE_EDITOR ? " active" : "") } href="#">Fee editor</a>
+                        <a className={ "nav-link" + (currentTab === tab.FEE_EDITOR ? " active" : "") } href="/#">Fee editor</a>
                     </li>
                 </ul>
             </div>

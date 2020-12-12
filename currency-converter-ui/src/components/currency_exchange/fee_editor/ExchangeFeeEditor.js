@@ -11,8 +11,21 @@ export function ExchangeFeeEditor() {
     const [ isExchangeFeesLoading, setIsExchangeFeesLoading ] = useState(true)
     const [ isAvailableCurrenciesLoading, setIsAvailableCurrenciesLoading ] = useState(true)
 
-    useEffect(() => CurrencyExchangeApi.getAvailableCurrencies(handleGetAvailableCurrenciesSuccess), [setAvailableCurrencies])
-    useEffect(() => CurrencyExchangeApi.getFees(handleGetFeesSuccess), [setExchangeFees])
+    useEffect(() => {
+        function handleGetAvailableCurrenciesSuccess(response) {
+            setAvailableCurrencies(response["currencies"])
+            setIsAvailableCurrenciesLoading(false)
+        }
+        CurrencyExchangeApi.getAvailableCurrencies(handleGetAvailableCurrenciesSuccess)
+    }, [])
+
+    useEffect(() => {
+        function handleGetFeesSuccess(response) {
+            setExchangeFees(response["exchangeFees"].map(it => ExchangeFee.from(it)))
+            setIsExchangeFeesLoading(false)
+        }
+        CurrencyExchangeApi.getFees(handleGetFeesSuccess)
+    }, [])
 
     function handleRemoveFee(fee) {
         CurrencyExchangeApi.removeFee(fee, handleRemoveFeeSuccess)
@@ -22,25 +35,15 @@ export function ExchangeFeeEditor() {
         CurrencyExchangeApi.addFee(fee, handleAddFeeSuccess)
     }
 
-    function handleGetAvailableCurrenciesSuccess(response) {
-        setAvailableCurrencies(response["currencies"])
-        setIsAvailableCurrenciesLoading(false)
+    function handleRemoveFeeSuccess(response) {
+        setExchangeFees(prevFees => prevFees.filter(it => it.id !== ExchangeFee.from(response.exchangeFee).id))
     }
 
-    function handleGetFeesSuccess(response) {
-        setExchangeFees(response["exchangeFees"].map(it => ExchangeFee.from(it)))
-        setIsExchangeFeesLoading(false)
+    function handleAddFeeSuccess(response) {
+        setExchangeFees(prevFees => [ExchangeFee.from(response.exchangeFee), ...prevFees])
     }
 
-    function handleRemoveFeeSuccess(fee) {
-        setExchangeFees(prevFees => prevFees.filter(it => !it.id !== fee.id))
-    }
-
-    function handleAddFeeSuccess(fee) {
-        setExchangeFees(prevFees => [fee, ...prevFees])
-    }
-
-    if (isExchangeFeesLoading && isAvailableCurrenciesLoading) {
+    if (isExchangeFeesLoading || isAvailableCurrenciesLoading) {
         return <Spinner/>
     }
     return (

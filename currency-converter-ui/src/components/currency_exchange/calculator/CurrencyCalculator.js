@@ -2,9 +2,7 @@ import React, {useEffect, useState} from "react";
 import {Spinner} from "../Spinner";
 import {CurrencyExchangeApi} from "../CurrencyExchangeApi";
 
-function computeCost(from, to, amount) {
-    return from + " " + to + " " + amount
-}
+
 
 export function CurrencyCalculator() {
     const [ availableCurrencies, setAvailableCurrencies ] = useState([])
@@ -12,20 +10,27 @@ export function CurrencyCalculator() {
     const [ toCurrency, setToCurrency ] = useState("RUB")
     const [ amount, setAmount ] = useState("0.00")
     const [ cost, setCost ] = useState("Calculator!")
-    const [ isLoading, setIsLoading ] = useState(true)
+    const [ isCurrencyExchangeAmountLoading, setIsCurrencyExchangeAmountLoading] = useState(true)
+    const [ isAvailableCurrenciesLoading, setIsAvailableCurrenciesLoading] = useState(true)
 
-    useEffect(() => CurrencyExchangeApi.getAvailableCurrencies(handleGetAvailableCurrenciesSuccess), [setAvailableCurrencies])
-    useEffect(() => CurrencyExchangeApi.computeCurrencyExchangeAmount(fromCurrency, toCurrency, amount, handleComputeResultingExchangeAmountSuccess), [fromCurrency, toCurrency, amount])
+    useEffect(() => {
+        function handleGetAvailableCurrenciesSuccess(response) {
+            setAvailableCurrencies(response["currencies"])
+            setIsAvailableCurrenciesLoading(false)
+        }
+        CurrencyExchangeApi.getAvailableCurrencies(handleGetAvailableCurrenciesSuccess)
+    }, [])
 
-    function handleGetAvailableCurrenciesSuccess(response) {
-        setAvailableCurrencies(response["currencies"])
-        setIsLoading(false)
-    }
-
-    function handleComputeResultingExchangeAmountSuccess(response) {
-        setCost(computeCost(fromCurrency, toCurrency, amount))
-        setIsLoading(false)
-    }
+    useEffect(() => {
+        let timeoutId = setTimeout(()=> { setIsCurrencyExchangeAmountLoading(true)}, 100)
+        function handleComputeResultingExchangeAmountSuccess(response) {
+            setCost(computeCost(fromCurrency, toCurrency, response.conversion))
+            setIsCurrencyExchangeAmountLoading(false)
+            clearTimeout(timeoutId)
+        }
+        CurrencyExchangeApi.computeCurrencyExchangeAmount(fromCurrency, toCurrency, amount, handleComputeResultingExchangeAmountSuccess)
+        return () => clearTimeout(timeoutId)
+    }, [fromCurrency, toCurrency, amount])
 
     function handleAmountChange({target}) {
         setAmount(target.value)
@@ -39,6 +44,13 @@ export function CurrencyCalculator() {
         setToCurrency(target.value)
     }
 
+    function computeCost(from, to, amount) {
+        return `${amount} ${to}`
+    }
+
+    if (isCurrencyExchangeAmountLoading && isAvailableCurrenciesLoading) {
+        return <Spinner/>
+    }
     return (
         <div>
             <form>
@@ -71,7 +83,7 @@ export function CurrencyCalculator() {
             </form>
             <div className="row p-3">
                 <div className="form-group col-md-12">
-                    { isLoading ? <Spinner/> : <h1 className="text-center">{cost}</h1> }
+                    { isCurrencyExchangeAmountLoading ? <Spinner/> : <h1 className="text-center">{cost}</h1> }
                 </div>
             </div>
         </div>
