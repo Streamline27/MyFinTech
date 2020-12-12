@@ -22,7 +22,7 @@ public class CurrencyCalculatorService {
 
     public CurrencyCalculatorResponse getConversion(String fromCurrency, String toCurrency, double fromAmount) {
         log.info("Computing amount after conversion. from:[{}], to:[{}], fromAmount:[{}]", fromCurrency, toCurrency, fromAmount);
-        BigDecimal conversion = computeConversion(fromCurrency.toUpperCase().trim(), toCurrency.toUpperCase().trim(), BigDecimal.valueOf(fromAmount));
+        BigDecimal conversion = computeConversion(fromCurrency, toCurrency, BigDecimal.valueOf(fromAmount));
         return CurrencyCalculatorResponse.builder()
                 .conversion(conversion.setScale(2, RoundingMode.HALF_DOWN).doubleValue())
                 .build();
