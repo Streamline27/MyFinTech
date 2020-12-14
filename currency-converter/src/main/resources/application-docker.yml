@@ -1,0 +1,10 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    url: ${DB_JDBC_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+fee-editor:
+  exchange-rate-url: "https://api.exchangeratesapi.io"
+  default-fee: 0.01
