@@ -1,7 +1,4 @@
 #!/bin/bash
-if [ -z "$API_HOST" ]
-then
-  cat <<END
-  window.RUNTIME_API_HOST=’${API_HOST}’;
-END
+if [ -n "$API_HOST" ]; then
+  echo "window.RUNTIME_API_HOST = '$API_HOST'" > public/env.js;
 fi
