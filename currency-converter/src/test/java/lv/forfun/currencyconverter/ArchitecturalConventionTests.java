@@ -14,24 +14,24 @@ public class ArchitecturalConventionTests {
 
     @ArchTest
     void apiClassesShouldFollowConventions(JavaClasses classes) {
-        ClassesShouldConjunction rule = ArchRuleDefinition.classes()
+        ArchRuleDefinition.classes()
                 .that().resideInAPackage("..api..")
                 .and().areNotNestedClasses()
                 .and().areNotEnums()
                 .and().doNotHaveSimpleName(Regex.class.getSimpleName())
                 .should().haveSimpleNameEndingWith("Request")
                 .orShould().haveSimpleNameEndingWith("Response")
-                .orShould().haveSimpleNameEndingWith("Dto");
-        rule.check(classes);
+                .orShould().haveSimpleNameEndingWith("Dto")
+                .check(classes);
     }
 
     @ArchTest
     void repositoryClassesShouldFollowConventions(JavaClasses classes) {
-        ClassesShouldConjunction rule = ArchRuleDefinition.classes()
+        ArchRuleDefinition.classes()
                 .that().areAssignableTo(Repository.class)
                 .should().beAnnotatedWith(org.springframework.stereotype.Repository.class)
                 .andShould().haveSimpleNameEndingWith("Repository")
-                .andShould().resideInAnyPackage("lv.forfun.currencyconverter.domain..");
-        rule.check(classes);
+                .andShould().resideInAnyPackage("lv.forfun.currencyconverter.domain..")
+                .check(classes);
     }
 }
