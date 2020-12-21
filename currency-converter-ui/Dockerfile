@@ -14,6 +14,8 @@ COPY --from=build /app/build /usr/share/nginx/html
 COPY --from=build /app/env2js.sh /usr/share/nginx/
 
 RUN apk add --no-cache bash
-RUN chmod +x /usr/share/nginx/env2js.sh
 
-CMD ["/bin/bash", "-c", "/usr/share/nginx/env2js.sh && nginx -g \"daemon off;\""]
+WORKDIR /usr/share/nginx
+RUN chmod +x ./env2js.sh
+
+CMD ["/bin/bash", "-c", "./env2js.sh && nginx -g \"daemon off;\""]
