@@ -14,12 +14,9 @@ services:
     container_name: currency-converter-ui.app.run_all
     image: "currency-converter-ui.app:latest"
     ports:
-      - 3000:3000
+      - 3000:80
     environment:
-      - "spring.profiles.active=docker"
-      - "DB_JDBC_URL=jdbc:postgresql://currency-converter.postgres.run_all:5432/postgres"
-      - "DB_USERNAME=postgres"
-      - "DB_PASSWORD=postgres"
+        - "API_HOST=http://localhost:8090"
   currency-converter.postgres.run_all:
     container_name: currency-converter.postgres.run_all
     image: "postgres"
