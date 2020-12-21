@@ -17,4 +17,3 @@ RUN apk add --no-cache bash
 RUN chmod +x /usr/share/nginx/env2js.sh
 
 CMD ["/bin/bash", "-c", "/usr/share/nginx/env2js.sh && nginx -g \"daemon off;\""]
-#CMD ["nginx", "-g", "daemon off;"]
