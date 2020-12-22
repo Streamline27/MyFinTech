@@ -36,7 +36,9 @@ public class CurrencyCalculatorService {
     }
 
     private BigDecimal getExchangeRate(String from, String to) {
-        if (from.equals(to)) return BigDecimal.ONE;
+        if (from.equals(to)) {
+            return BigDecimal.ONE;
+        }
         ExchangeRatesApi.Response response = exchangeRatesApi.getExchangeRates(from, to);
         Double exchangeFee = response.getRates().entrySet().iterator().next().getValue();
         return BigDecimal.valueOf(exchangeFee);
