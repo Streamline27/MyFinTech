@@ -1,18 +1,24 @@
-import React from "react";
-import {Navigation} from "./components/Navigation";
-import {CurrencyExchange} from "./components/currency_exchange/CurrencyExchange";
+import React, {useState} from "react";
+import {HomePage} from "./components/HomePage";
+import {LoginPage} from "./components/LoginPage";
 
 export const API_HOST = window.RUNTIME_API_HOST ? window.RUNTIME_API_HOST : "http://localhost:3000";
 
 function App() {
+    const [ isLoggedIn, setIsLoggedIn ] = useState(false)
+
+    function handleLoggedIn() {
+        setIsLoggedIn(true)
+    }
+
+    function handleLogout() {
+        setIsLoggedIn(false)
+    }
+
     return (
         <div>
-            <Navigation/>
-            <div className="container">
-                <div className="my-3 p-3 bg-white rounded shadow-sm">
-                    <CurrencyExchange/>
-                </div>
-            </div>
+            { isLoggedIn  && <HomePage onLogout={handleLogout}/>}
+            { !isLoggedIn && <LoginPage onLoggedIn={handleLoggedIn}/> }
         </div>
     );
 }

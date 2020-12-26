@@ -8,7 +8,7 @@
 ### To run services for development
 1) From `./currency-converter` run `docker-compose up`. This will start database.
 2) Launch `CurrencyConverterApplication.java`
-3) From `./currency-converter-ui` run `npm start`. This will launch UI with hot reload
+3) From `./currency-converter-ui` run `npm install` and `npm start`. This will launch UI with hot reload
 
 ## What is next?
 
